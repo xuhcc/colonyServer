@@ -14,11 +14,8 @@ const typeDefs = gql`
   }
 
   type User {
+    id: String!
     profile: UserProfile!
-  }
-
-  type Query {
-    user(address: String!): User!
   }
 
   input UserProfileInput {
@@ -27,6 +24,10 @@ const typeDefs = gql`
     displayName: String
     location: String
     website: String
+  }
+
+  type Query {
+    user(address: String!): User!
   }
 
   type Mutation {
@@ -38,6 +39,7 @@ const typeDefs = gql`
 const TEMP_inMemoryStorage = {
   users: {
     '0xb77D57F4959eAfA0339424b83FcFaf9c15407461': {
+      id: '0xb77D57F4959eAfA0339424b83FcFaf9c15407461',
       profile: {
         username: 'c',
         avatarHash: 'QmRyLAw2orT8hSCaY3DwpVvNuxeyQZLDkYKEwXkfSW5bER',
@@ -64,6 +66,7 @@ const resolvers = {
       // FIXME here we should check whether the user is the same that tries to modify this entry
       // Plus Of course all other kinds of input validation I guess
       const user = {
+        id: address,
         profile: {
           username,
           walletAddress: address,
@@ -84,6 +87,7 @@ const resolvers = {
           ...profile,
         },
       }
+      TEMP_inMemoryStorage.users[address] = user;
       return user;
     },
   },
