@@ -287,7 +287,7 @@ export const Mutation: MutationResolvers<ApolloContext> = {
   },
   async finalizeTask(
     parent,
-    { input: { id } },
+    { input: { id, ethTaskId, potId } },
     { userAddress, api, dataSources: { data, auth } },
   ) {
     const { colonyAddress, ethDomainId } = await data.getTaskById(id)
@@ -298,7 +298,7 @@ export const Mutation: MutationResolvers<ApolloContext> = {
         domainId: ethDomainId,
       }),
     )
-    await api.finalizeTask(userAddress, id)
+    await api.finalizeTask(userAddress, { id, ethTaskId, potId })
     return data.getTaskById(id)
   },
   async cancelTask(

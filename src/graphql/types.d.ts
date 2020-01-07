@@ -175,29 +175,35 @@ export type Event = {
 export type EventContext = AssignWorkerEvent | CancelTaskEvent | CreateDomainEvent | CreateTaskEvent | CreateWorkRequestEvent | FinalizeTaskEvent | NewUserEvent | RemoveTaskPayoutEvent | SendWorkInviteEvent | SetTaskDescriptionEvent | SetTaskDomainEvent | SetTaskDueDateEvent | SetTaskPayoutEvent | SetTaskSkillEvent | SetTaskTitleEvent | TaskMessageEvent | UnassignWorkerEvent;
 
 export enum EventType {
-  AssignWorker = 'ASSIGN_WORKER',
-  CancelTask = 'CANCEL_TASK',
-  CreateDomain = 'CREATE_DOMAIN',
-  CreateTask = 'CREATE_TASK',
-  CreateWorkRequest = 'CREATE_WORK_REQUEST',
-  FinalizeTask = 'FINALIZE_TASK',
-  NewUser = 'NEW_USER',
-  RemoveTaskPayout = 'REMOVE_TASK_PAYOUT',
-  SendWorkInvite = 'SEND_WORK_INVITE',
-  SetTaskDescription = 'SET_TASK_DESCRIPTION',
-  SetTaskDomain = 'SET_TASK_DOMAIN',
-  SetTaskDueDate = 'SET_TASK_DUE_DATE',
-  SetTaskPayout = 'SET_TASK_PAYOUT',
-  SetTaskSkill = 'SET_TASK_SKILL',
-  SetTaskTitle = 'SET_TASK_TITLE',
-  TaskMessage = 'TASK_MESSAGE',
-  UnassignWorker = 'UNASSIGN_WORKER'
+  AssignWorker = 'AssignWorker',
+  CancelTask = 'CancelTask',
+  CreateDomain = 'CreateDomain',
+  CreateTask = 'CreateTask',
+  CreateWorkRequest = 'CreateWorkRequest',
+  FinalizeTask = 'FinalizeTask',
+  NewUser = 'NewUser',
+  RemoveTaskPayout = 'RemoveTaskPayout',
+  SendWorkInvite = 'SendWorkInvite',
+  SetTaskDescription = 'SetTaskDescription',
+  SetTaskDomain = 'SetTaskDomain',
+  SetTaskDueDate = 'SetTaskDueDate',
+  SetTaskPayout = 'SetTaskPayout',
+  SetTaskSkill = 'SetTaskSkill',
+  SetTaskTitle = 'SetTaskTitle',
+  TaskMessage = 'TaskMessage',
+  UnassignWorker = 'UnassignWorker'
 }
 
 export type FinalizeTaskEvent = TaskEvent & {
    __typename?: 'FinalizeTaskEvent',
   type: EventType,
   taskId: Scalars['String'],
+};
+
+export type FinalizeTaskInput = {
+  id: Scalars['String'],
+  ethTaskId: Scalars['String'],
+  potId: Scalars['String'],
 };
 
 
@@ -317,7 +323,7 @@ export type MutationCreateWorkRequestArgs = {
 
 
 export type MutationFinalizeTaskArgs = {
-  input: TaskIdInput
+  input: FinalizeTaskInput
 };
 
 
@@ -568,9 +574,9 @@ export type Task = {
   dueDate?: Maybe<Scalars['GraphQLDateTime']>,
   finalizedAt?: Maybe<Scalars['GraphQLDateTime']>,
   title?: Maybe<Scalars['String']>,
-  colony?: Maybe<Colony>,
+  colony: Colony,
   colonyAddress: Scalars['String'],
-  creator?: Maybe<User>,
+  creator: User,
   creatorAddress: Scalars['String'],
   domain: Domain,
   assignedWorker?: Maybe<User>,
@@ -649,7 +655,7 @@ export type User = {
   taskIds: Array<Scalars['String']>,
   tokens: Array<Token>,
   tokenAddresses: Array<Scalars['String']>,
-  notifications?: Maybe<Array<Notification>>,
+  notifications: Array<Notification>,
 };
 
 
@@ -795,6 +801,7 @@ export type ResolversTypes = {
   TaskIdInput: TaskIdInput,
   CreateTaskInput: CreateTaskInput,
   CreateWorkRequestInput: CreateWorkRequestInput,
+  FinalizeTaskInput: FinalizeTaskInput,
   RemoveTaskPayoutInput: RemoveTaskPayoutInput,
   SendWorkInviteInput: SendWorkInviteInput,
   SetTaskDomainInput: SetTaskDomainInput,
@@ -863,6 +870,7 @@ export type ResolversParentTypes = {
   TaskIdInput: TaskIdInput,
   CreateTaskInput: CreateTaskInput,
   CreateWorkRequestInput: CreateWorkRequestInput,
+  FinalizeTaskInput: FinalizeTaskInput,
   RemoveTaskPayoutInput: RemoveTaskPayoutInput,
   SendWorkInviteInput: SendWorkInviteInput,
   SetTaskDomainInput: SetTaskDomainInput,
@@ -1083,9 +1091,9 @@ export type TaskResolvers<ContextType = any, ParentType extends ResolversParentT
   dueDate?: Resolver<Maybe<ResolversTypes['GraphQLDateTime']>, ParentType, ContextType>,
   finalizedAt?: Resolver<Maybe<ResolversTypes['GraphQLDateTime']>, ParentType, ContextType>,
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  colony?: Resolver<Maybe<ResolversTypes['Colony']>, ParentType, ContextType>,
+  colony?: Resolver<ResolversTypes['Colony'], ParentType, ContextType>,
   colonyAddress?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  creator?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+  creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   creatorAddress?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   domain?: Resolver<ResolversTypes['Domain'], ParentType, ContextType>,
   assignedWorker?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
@@ -1146,7 +1154,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   taskIds?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>,
   tokens?: Resolver<Array<ResolversTypes['Token']>, ParentType, ContextType, UserTokensArgs>,
   tokenAddresses?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>,
-  notifications?: Resolver<Maybe<Array<ResolversTypes['Notification']>>, ParentType, ContextType, UserNotificationsArgs>,
+  notifications?: Resolver<Array<ResolversTypes['Notification']>, ParentType, ContextType, UserNotificationsArgs>,
 };
 
 export type UserProfileResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserProfile'] = ResolversParentTypes['UserProfile']> = {

@@ -90,6 +90,12 @@ export default gql`
     id: String!
   }
 
+  input FinalizeTaskInput {
+    id: String!
+    ethTaskId: String!
+    potId: String!
+  }
+
   input EditColonyProfileInput {
     colonyAddress: String!
     avatarHash: String
@@ -170,7 +176,7 @@ export default gql`
     cancelTask(input: TaskIdInput!): Task
     createTask(input: CreateTaskInput!): Task
     createWorkRequest(input: CreateWorkRequestInput!): Task
-    finalizeTask(input: TaskIdInput!): Task
+    finalizeTask(input: FinalizeTaskInput!): Task
     removeTaskPayout(input: RemoveTaskPayoutInput!): Task
     sendWorkInvite(input: SendWorkInviteInput!): Task
     setTaskDomain(input: SetTaskDomainInput!): Task
