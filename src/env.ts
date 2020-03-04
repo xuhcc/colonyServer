@@ -7,3 +7,4 @@ export const blockchainNetwork = process.env.NETWORK || 'local'
 export const infuraId = process.env.INFURA_ID
 export const ethplorerKey = process.env.ETHPLORER_API_KEY || 'freekey'
 export const isMainnet = blockchainNetwork === 'mainnet'
+export const rpcEndpoint = process.env.RPC_ENDPOINT
