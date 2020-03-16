@@ -115,11 +115,12 @@ export const Mutation: MutationResolvers<ApolloContext> = {
     { input: { id, status } },
     { userAddress, api, dataSources: { data, auth } },
   ) {
+    const suggestion = await data.getSuggestionById(id)
     const {
       colonyAddress,
       creatorAddress,
       ethDomainId,
-    } = await data.getSuggestionById(id)
+    } = suggestion;
     // Only skip auth if user wants to delete and is the creator
     if (
       !(status === SuggestionStatus.Deleted && userAddress === creatorAddress)
@@ -133,7 +134,10 @@ export const Mutation: MutationResolvers<ApolloContext> = {
       )
     }
     await api.editSuggestion(id, { status })
-    return data.getSuggestionById(id)
+    return {
+      ...suggestion,
+      status,
+    }
   },
   async addUpvoteToSuggestion(
     parent,

@@ -147,7 +147,11 @@ export class ColonyMongoApi {
   }
 
   private async tryGetSuggestion(id: string) {
-    const suggestion = await this.suggestions.findOne(new ObjectID(id))
+    const query = {
+      _id: new ObjectID(id),
+      status: { $ne: SuggestionStatus.Deleted },
+    }
+    const suggestion = await this.suggestions.findOne(query)
     assert.ok(!!suggestion, `Suggestion with ID '${id}' not found`)
     return suggestion
   }

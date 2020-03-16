@@ -293,11 +293,19 @@ export class ColonyMongoDataSource extends MongoDataSource<Collections, {}>
   }
 
   async getSuggestionById(id: string, ttl?: number) {
-    const doc = ttl
-      ? await this.collections.suggestions.findOneById(id, { ttl })
-      : await this.collections.suggestions.collection.findOne({
-          _id: new ObjectID(id),
-        })
+    const query = {
+      _id: new ObjectID(id),
+      status: { $ne: SuggestionStatus.Deleted },
+    }
+    let doc: SuggestionDoc
+    if (ttl) {
+      const docs = await this.collections.suggestions.findManyByQuery(query, {
+        ttl,
+      })
+      doc = docs[0]
+    } else {
+      doc = await this.collections.suggestions.collection.findOne(query)
+    }
 
     if (!doc) throw new Error(`Suggestion with id '${id}' not found`)
 
